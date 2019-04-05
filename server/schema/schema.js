@@ -5,7 +5,8 @@ const { GraphQLObjectType,
         GraphQLString,
         GraphQLSchema,
         GraphQLID,
-        GraphQLInt
+        GraphQLInt,
+        GraphQLList
       } = graphql;
 
 // dummy data
@@ -19,9 +20,8 @@ var books = [
   {name: 'Cracking the Coding Interview: 189 Programming Questions and Solutions', genre: 'Computers & Technology', id: '7', authorId: '7'},
   {name: 'Start with Why: How Great Leaders Inspire Everyone to Take Action', genre: 'Computers & Technology', id: '8', authorId: '8'},
   {name: 'Digital Minimalism: Choosing a Focused Life in a Noisy World', genre: 'Computers & Technology', id: '9', authorId: '9'},
-  {name: 'Algorithms (4th Edition)', genre: 'Programming', id: '10', authorId: ['10','11']},
-  {name: 'Algorithms in C++ Part 5: Graph Algorithms (3rd Edition) (Pt.5)', genre: 'Programming', id: '11', authorId: '10'},
-  {name: 'Automate This: How Algorithms Took Over Our Markets, Our Jobs, and the World', genre: 'Programming', id: '12', authorId: '12' }
+  {name: 'Algorithms in C++ Part 5: Graph Algorithms (3rd Edition) (Pt.5)', genre: 'Programming', id: '10', authorId: '10'},
+  {name: 'Automate This: How Algorithms Took Over Our Markets, Our Jobs, and the World', genre: 'Programming', id: '11', authorId: '12' }
 
 ];
 
@@ -60,7 +60,13 @@ const AuthorType = new GraphQLObjectType({
   fields: () => ({
     id: {type: GraphQLID},
     name: {type: GraphQLString},
-    age: {type: GraphQLInt}
+    age: {type: GraphQLInt},
+    books: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args){
+        return _.filter(books, {authorId: parent.id})
+      }
+    }
   })
 });
 
